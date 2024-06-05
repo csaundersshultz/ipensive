@@ -17,8 +17,8 @@ import barry_config as config
 
 from array_processing import process_array
 
-T1 = "2024-02-21 00:50"
-T2 = "2024-02-21 01:00"
+T1 = "2022-10-01 00:00"
+T2 = "2022-11-01 00:00"
 OVERWRITE = True
 
 # ARRAYS=['Akutan']
@@ -72,5 +72,8 @@ def run_backpopulate():
 
 
 if __name__ == "__main__":
+
+    # TESTING PURPOSES:
+    print(f"WINDOW = {config.WINDOW_LENGTH}   OVERLAP = {config.OVERLAP}")
 
     run_backpopulate()

@@ -10,22 +10,27 @@ OUT_ASCII_DIR = "C:/Users/csaunders-shultz/Documents/ipensive/output/ascii"
 LOGS_DIR = "C:/Users/csaunders-shultz/Documents/ipensive/output/logs"
 
 # DEFAUlT PROCESSING PARAMETERS
-DURATION = 600  # DON'T CHANGE THIS!
+DURATION = 600  # DON'T CHANGE THIS! #10 minute sections at a time
 LATENCY = 60  # how long to pause and wait for data latency to catch up before processing (seconds)
 EXTRA_PAUSE = 0  # extra pause in case some arrays are extra latent (Dillingham)
-FREQMIN = 0.8  # minimum frequency
-FREQMAX = 5.0  # maximum frequency
+
+FREQMIN = 1  # 0.8  # minimum frequency   ##FOR BANDPASS FILTER
+FREQMAX = 20  # 5.0  # maximum frequency   ## FOR BANDPASS FILTER
+# st.filter( "bandpass", freqmin=params["FREQMIN"], freqmax=params["FREQMAX"], corners=2, zerophase=True,)
+
 TAPER = 5.0  # seconds to taper beginning and end of trace before filtering
-WINDOW_LENGTH = 30  # window length for each calculation [seconds]
+WINDOW_LENGTH = 20  # default=30 # window length for each calculation [seconds]
 OVERLAP = 15  # amount of overlap between windows [seconds]
 MIN_CHAN = 3  # minimum number of channels needed to perform inversion
 
 # DEFAULT PLOTTING PARAMETERS
-MCTHRESH = 0.6  # where to draw the threshold line in MCCM plot
-AZ_MIN = 0  # minimum azimuth to plot
-AZ_MAX = 360  # maximum azimuth to plot
-VEL_MIN = 0.25  # minimum sound speed range
+MCTHRESH = 0.6  # 0.6  # where to draw the threshold line in MCCM plot
+AZ_MIN = 220  # 220 # minimum azimuth to plot
+AZ_MAX = 340  # 340 # maximum azimuth to plot
+VEL_MIN = 0.25  # minimum sound speed range #SPECIFIES GRAY BOX, NOT yLIMITS
 VEL_MAX = 0.45  # maximum sound speed range
+
+
 ARRAY_LABEL = "Infrasound"
 
 # Infrasound channels list
@@ -85,7 +90,7 @@ NETWORKS = [
                             "v_lon": -148.171899,
                         },
                     ],
-                    "AZ_MIN": 220,
+                    "AZ_MIN": 220,  # specifies non-default plotting parameters
                     "AZ_MAX": 340,
                 }
             ),

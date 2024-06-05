@@ -133,6 +133,9 @@ def process_array(array, network, T0):
             )
             rms.append(rms0)
             pressure.append(pk_press)
+
+            ###HERE WOULD BE THE PLACE TO ADD NEW METRICS TO SAVE
+
         except:
             print("Something went wrong in the inversion...")
             continue

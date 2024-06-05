@@ -23,6 +23,7 @@ from matplotlib import dates
 from matplotlib.patches import Rectangle
 from matplotlib.collections import PatchCollection
 
+
 fonts = 10
 rcParams.update({"font.size": fonts})
 ################################
@@ -217,7 +218,8 @@ def grab_data(scnl, T1, T2, hostname, port, fill_value=0, grab_local=False):
 
     if hostname == "IRIS":
         client = Client_IRIS("IRIS")
-        print("Client 'IRIS' set correctly")
+
+        # print("Client 'IRIS' set correctly")
     else:
         client = Client(hostname, int(port))
 
@@ -233,7 +235,7 @@ def grab_data(scnl, T1, T2, hostname, port, fill_value=0, grab_local=False):
                     T1,
                     T2,
                 )
-                print(f"some data? tr type = {type(tr)}")
+                # print(f"some data? tr type = {type(tr)}")
             else:
                 tr = client.get_waveforms(
                     sta.split(".")[2],
@@ -325,8 +327,15 @@ def write_ascii_file(t2, t, pressure, azimuth, velocity, mccm, rms, name):
         os.mkdir(d0)
 
     subfolder = d0 + "/{}".format(t1.strftime("%Y-%m"))
+
+    # code for testing out different windows/overlaps
+    # window_folder = f"Window{config.WINDOW_LENGTH}_Overlap{config.OVERLAP}"
+    # subfolder = subfolder + "/" + window_folder
+
     if not os.path.exists(subfolder):
         os.mkdir(subfolder)
+
+    # Add windowlength and overlap to filenames
 
     filename = subfolder + "/" + name + "_" + t1.strftime("%Y-%m-%d") + ".txt"
 
