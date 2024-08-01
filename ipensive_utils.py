@@ -356,6 +356,7 @@ def write_ascii_file(t2, t, pressure, azimuth, velocity, mccm, rms, name):
     tmp = tmp[tmp["Time"] <= t2.strftime("%Y-%m-%d %H:%M:%S")]
     tmp["Velocity"] = 1000 * tmp["Velocity"]
 
+    ### Intelligently inserts data into existing .txt files, if they exist.
     if os.path.exists(filename):
         df = pd.read_csv(filename, sep="\t", parse_dates=["Time"])
         df = df[

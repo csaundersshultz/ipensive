@@ -15,11 +15,23 @@ import barry_config as config
 # print(f"TEST HOSTNAME IS {config.HOSTNAME}")
 
 
-from array_processing import process_array
+from ipensive_array_processing import process_array
 
-T1 = "2022-10-01 00:00"
+### Done! Now collecting ascii files and determining missing time steps:
+
+
+T1 = "2022-09-05 00:00"  # May 1
 T2 = "2022-11-01 00:00"
-OVERWRITE = True
+
+#
+# COMPLETED TIMES:
+#
+# Missing lots of data from ~09-08 to 07-17 or so. Retry after finishing all?
+#
+# T1 = "2023-05-14 18:00"  # May 1 TO
+# T2 = "2023-10-01 00:00"  # October 1
+
+OVERWRITE = False
 
 # ARRAYS=['Akutan']
 # specify ARRAYS if you want to just process specific arrays
@@ -30,7 +42,7 @@ OVERWRITE = True
 ARRAYS = ["Barry Arm East"]
 
 
-def run_backpopulate():
+def run_backpopulate(T1, T2):
 
     t1 = UTCDateTime(T1) + config.DURATION
     for t in pd.date_range(T2, t1.strftime("%Y%m%d%H%M"), freq="-10min"):
@@ -76,4 +88,4 @@ if __name__ == "__main__":
     # TESTING PURPOSES:
     print(f"WINDOW = {config.WINDOW_LENGTH}   OVERLAP = {config.OVERLAP}")
 
-    run_backpopulate()
+    run_backpopulate(T1, T2)

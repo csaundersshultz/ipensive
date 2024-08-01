@@ -5,7 +5,9 @@
 # TESTING!!!
 HOSTNAME = "IRIS"  # waveserver to get data from  old="pubavo1.wr.usgs.gov"
 PORT = 420  # No port for IRIS #old=16022
+# OUT_VALVE_DIR = "COMMENT_OUT"
 OUT_WEB_DIR = "C:/Users/csaunders-shultz/Documents/ipensive/output/pngs"
+SAVE_PLOTS = True
 OUT_ASCII_DIR = "C:/Users/csaunders-shultz/Documents/ipensive/output/ascii"
 LOGS_DIR = "C:/Users/csaunders-shultz/Documents/ipensive/output/logs"
 

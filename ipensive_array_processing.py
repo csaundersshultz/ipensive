@@ -146,20 +146,22 @@ def process_array(array, network, T0):
     rms = np.array(rms)
     pressure = np.array(pressure)
 
-    try:
-        print("Setting up web output folders")
-        utils.web_folders(st, array, t2, network["Name"])
-        print("Making plot...")
-        utils.plot_results(
-            t1, t2, t, st, mccm, velocity, azimuth, array, network["Name"]
-        )
-    except:
-        import traceback
+    ### Make the plots ###
+    if config.SAVE_PLOTS == True:
+        try:
+            print("Setting up web output folders")
+            utils.web_folders(st, array, t2, network["Name"])
+            print("Making plot...")
+            utils.plot_results(
+                t1, t2, t, st, mccm, velocity, azimuth, array, network["Name"]
+            )
+        except:
+            import traceback
 
-        b = traceback.format_exc()
-        message = "".join("{}\n".format(a) for a in b.splitlines())
-        print("Something went wrong making the plot:")
-        print(message)
+            b = traceback.format_exc()
+            message = "".join("{}\n".format(a) for a in b.splitlines())
+            print("Something went wrong making the plot:")
+            print(message)
 
     if "OUT_VALVE_DIR" in dir(config):
         try:
@@ -258,12 +260,13 @@ if __name__ == "__main__":
             )
 
     # Write out the new HTML file
-    script_path = os.path.dirname(__file__)
-    with open(os.path.join(script_path, "index.template"), "r") as f:
-        template = jinja2.Template(f.read())
-    html = template.render(networks=all_nets, arrays=all_arrays)
-    with open(os.path.join(config.OUT_WEB_DIR, "index.html"), "w") as f:
-        f.write(html)
+    if config.SAVE_PLOTS == True:
+        script_path = os.path.dirname(__file__)
+        with open(os.path.join(script_path, "index.template"), "r") as f:
+            template = jinja2.Template(f.read())
+        html = template.render(networks=all_nets, arrays=all_arrays)
+        with open(os.path.join(config.OUT_WEB_DIR, "index.html"), "w") as f:
+            f.write(html)
 
     print("{:.1f} seconds to process all".format(time.time() - timer_start))
     print("Finish time: {}".format(UTCDateTime.utcnow()))
