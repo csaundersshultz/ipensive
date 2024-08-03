@@ -20,8 +20,8 @@ from ipensive_array_processing import process_array
 ### Done! Now collecting ascii files and determining missing time steps:
 
 
-T1 = "2022-09-05 00:00"  # May 1
-T2 = "2022-11-01 00:00"
+T1 = "2023-10-01 00:00"  # May 1
+T2 = "2023-11-01 00:00"
 
 #
 # COMPLETED TIMES:
