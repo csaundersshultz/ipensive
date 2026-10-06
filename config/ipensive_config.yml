@@ -13,22 +13,23 @@ LOGS_DIR: output/logs
 #################################
 
 ###### Targets & Metadata #######
-STATION_XML: data/stations.xml
-TARGETS_FILE: data/volcano_list.txt
+STATION_XML: data/Landslides_stations.xml #data/stations.xml
+TARGETS_FILE: data/Landslides_targets.txt #data/volcano_list.txt
 #################################
 
 # Optional array config file location.
 # This can be set here, or as an environment variable.
 # If neither is set, it defaults to ../config/arrays_config.yml
 # 
-ARRAYS_CONFIG: config/arrays_config.yml
+ARRAYS_CONFIG: config/Landslides_arrays_config.yml
 
 
 ## Optional urls that get linked from the iPensive webpage
 EXTRA_LINKS:
-  - Data Output: output/ascii_output
+  - Data Output: ../ascii_output
   - AK Array Locations: https://ds.iris.edu/gmap/#network=AV&location=01&channel=HDF&planet=earth
   - CNMI Array Locations: https://ds.iris.edu/gmap/#network=MI,IM&station=FLX,H11N1,H11S1&planet=earth
+  - Barry Arm Velocity/Azimuth plots: barry_dashboard.html
 
 
 # Example data source configurations:

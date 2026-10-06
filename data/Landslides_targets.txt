@@ -1,0 +1,6 @@
+Target,Longitude,Latitude
+Barry Glacier / Tail,-148.137882,61.145313
+Core,-148.148203,61.150054
+Prow,-148.153993,61.141487
+Kite,-148.168980,61.139483
+Cascade Glacier,-148.171899,61.119845

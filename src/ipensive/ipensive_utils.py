@@ -328,6 +328,7 @@ def write_html(config):
         networks=list(config['NETWORKS'].keys()),
         arrays=config["NETWORKS"],
         extra_links=config["EXTRA_LINKS"],
+        barry_arm_plot=config.get("BARRY_ARM_PLOT"),
     )
     out_file = config["OUT_WEB_DIR"] / "index.html"
     with open(out_file, "w") as f:

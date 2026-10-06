@@ -10,6 +10,7 @@ import pandas as pd
 from obspy import UTCDateTime as utc
 from ipensive.array_processing import process_array
 from ipensive import ipensive_utils as utils
+from ipensive import barry_dashboard
 
 
 def parse_args():
@@ -89,6 +90,7 @@ def run_backpopulate(config, T1, T2, OVERWRITE, ARRAYS, my_log):
     """
 
     t1 = utc(T1) + config["DURATION"]
+    plotted_barry_days = set()
     for t in pd.date_range(T2, t1.strftime("%Y%m%d%H%M"), freq="-10min"):
         my_log.info(t)
 
@@ -107,9 +109,21 @@ def run_backpopulate(config, T1, T2, OVERWRITE, ARRAYS, my_log):
                 my_log.info("\n")
             else:
                 my_log.info("File exists. No overwrite. Skip " + array_name)
+
+            if array_name == "Barry Arm East":
+                plot_day = (t - pd.Timedelta(seconds=config[array_name]["DURATION"])).date()
+                if (
+                    plot_day not in plotted_barry_days
+                    and barry_dashboard.is_barry_ascii_file_complete(config, plot_day)
+                ):
+                    barry_dashboard.barry_arm_plot(config, plot_day)
+                    plotted_barry_days.add(plot_day)
+
     my_log.info("Back population complete.")
     my_log.info("Writing .html file")
     utils.write_html(config)
+    barry_dashboard.write_barry_dashboard_html(config)
+    my_log.info("Barry arm dashboard created!")
 
 
 def main():

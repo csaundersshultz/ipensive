@@ -2,6 +2,7 @@ import time
 import logging
 from ipensive import ipensive_utils as utils
 from ipensive import array_processing
+from ipensive import barry_dashboard
 
 
 def main():
@@ -50,6 +51,9 @@ def main():
 
     # Write out the new HTML file
     utils.write_html(config)
+    barry_dashboard.barry_arm_plot(config)
+    barry_dashboard.write_barry_dashboard_html(config)
+    my_log.info(f"Barry arm dashboard created!")
 
     my_log.info(f"{time.time() - timer_0:.1f} seconds to process all")
 

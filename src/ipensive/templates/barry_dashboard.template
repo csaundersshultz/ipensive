@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Barry Arm Dashboard</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0 20px 30px;
+            background-color: #202020;
+            color: #cccccc;
+            font-family: Verdana, sans-serif;
+            font-size: 10pt;
+        }
+
+        .nav {
+            padding: 15px 0;
+            border-bottom: 1px solid #474d36;
+        }
+
+        .button {
+            display: inline-block;
+            border: 1px solid #567300;
+            border-radius: 8px;
+            padding: 5px 10px;
+            background: linear-gradient(#474d36, #5e6647);
+            box-shadow: rgba(0, 0, 0, 1) 0 1px 0;
+            color: #cccccc;
+            font-size: 14px;
+            text-decoration: none;
+            text-shadow: rgba(0, 0, 0, .4) 0 1px 0;
+        }
+
+        .button:hover {
+            background: #28597a;
+            color: #ffffff;
+        }
+
+        h1 {
+            font-size: 160%;
+            font-weight: normal;
+            text-align: center;
+        }
+
+        .plot {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="nav">
+        <a class="button" href="index.html">Back to iPensive home</a>
+    </div>
+    <h1>Barry Arm Dashboard</h1>
+    <img class="plot" src="{{ plot_path }}" alt="Barry Arm velocity and azimuth plot">
+</body>
+</html>

@@ -1,0 +1,52 @@
+############### Defaults ###############
+########################################
+PARAMS: &defaults
+
+  # PROCESSING PARAMETERS
+  EXTRA_PAUSE   : 0     # extra pause in case some arrays are extra latent (Dillingham)
+  FREQMIN       : 0.8   # minimum frequency
+  FREQMAX       : 5.0   # maximum frequency
+  TAPER         : 5.0   # seconds to taper beginning and end of trace before filtering
+  WINDOW_LENGTH : 30    # window length for each calculation [seconds]
+  OVERLAP       : 15    # amount of overlap between windows [seconds]
+  MIN_CHAN      : 3     # minimum number of channels needed to perform inversion
+  LTS_ALPHA     : 0.5   # decimal [0.50, 1.0] amount of data to keep in the subsets
+
+  # PLOTTING PARAMETERS
+  PLOT_MCCM     : True  # make MdCCM scatter subplot
+  MCTHRESH      : 0.6   # where to draw the threshold line in MCCM plot
+  AZ_MIN        : 0     # minimum azimuth to plot
+  AZ_MAX        : 360   # maximum azimuth to plot
+  VEL_MIN       : 0.25  # minimum sound speed range
+  VEL_MAX       : 0.45  # maximum sound speed range
+  ARRAY_LABEL   : Infrasound
+########################################
+########################################
+
+# Define arrays to be processed
+NETWORKS:
+  Landslides:
+    - Barry Arm East
+
+# Configure each array's channels, back-azimuth targets, 
+# and (optionally) different pre-processing/plotting parameters
+Barry Arm East:
+  <<: *defaults
+  NSLC:
+    - AV.BAEI.01.HDF
+    - AV.BAEI.02.HDF
+    - AV.BAEI.03.HDF
+    - AV.BAEI.04.HDF
+    - AV.BAEI.05.HDF
+    - AV.BAEI.06.HDF
+  TARGETS:
+    - Barry Glacier / Tail
+    - Core
+    - Prow
+    - Kite
+    - Cascade Glacier
+  FREQMIN: 1
+  FREQMAX: 30
+  AZ_MIN: 220
+  AZ_MAX: 340
+  PLOTCHAN: AV.BAEI.02.HDF
