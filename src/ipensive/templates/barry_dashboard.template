@@ -48,6 +48,33 @@
             height: auto;
             margin: 0 auto;
         }
+
+        .plot-navigation {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            margin: 16px 0;
+        }
+
+        .arrow-button {
+            border: 1px solid #567300;
+            border-radius: 4px;
+            padding: 6px 12px;
+            background: #474d36;
+            color: #cccccc;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .arrow-button:disabled {
+            opacity: 0.45;
+            cursor: default;
+        }
+
+        #image-unavailable {
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -55,6 +82,47 @@
         <a class="button" href="index.html">Back to iPensive home</a>
     </div>
     <h1>Barry Arm Dashboard</h1>
-    <img class="plot" src="{{ plot_path }}" alt="Barry Arm velocity and azimuth plot">
+    <div class="plot-navigation">
+        <button class="arrow-button" id="previous-day" type="button" aria-label="Previous day">&larr;</button>
+        <span id="plot-date" aria-live="polite"></span>
+        <button class="arrow-button" id="next-day" type="button" aria-label="Next day">&rarr;</button>
+    </div>
+    <img class="plot" id="plot-image" alt="Barry Arm velocity and azimuth plot">
+    <p id="image-unavailable" hidden>Image not available</p>
+
+    <script>
+        const currentDate = new Date("{{ today }}T00:00:00Z");
+        const latestDate = new Date("{{ today }}T00:00:00Z");
+        const plotImage = document.getElementById("plot-image");
+        const plotDate = document.getElementById("plot-date");
+        const unavailableMessage = document.getElementById("image-unavailable");
+        const nextButton = document.getElementById("next-day");
+
+        function updatePlot() {
+            const day = currentDate.toISOString().slice(0, 10);
+            plotDate.textContent = day;
+            nextButton.disabled = currentDate >= latestDate;
+            unavailableMessage.hidden = true;
+            plotImage.hidden = false;
+            plotImage.src = `Landslides/Barry%20Arm%20East/velaz_plots/barry_arm_velaz_${day}.png`;
+        }
+
+        plotImage.addEventListener("error", () => {
+            plotImage.hidden = true;
+            unavailableMessage.hidden = false;
+        });
+        document.getElementById("previous-day").addEventListener("click", () => {
+            currentDate.setUTCDate(currentDate.getUTCDate() - 1);
+            updatePlot();
+        });
+        nextButton.addEventListener("click", () => {
+            if (currentDate < latestDate) {
+                currentDate.setUTCDate(currentDate.getUTCDate() + 1);
+                updatePlot();
+            }
+        });
+
+        updatePlot();
+    </script>
 </body>
 </html>

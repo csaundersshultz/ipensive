@@ -90,14 +90,14 @@ def run_backpopulate(config, T1, T2, OVERWRITE, ARRAYS, my_log):
     """
 
     t1 = utc(T1) + config["DURATION"]
-    plotted_barry_days = set()
-    for t in pd.date_range(T2, t1.strftime("%Y%m%d%H%M"), freq="-10min"):
+    barry_already_plotted = set()
+    array_list = ARRAYS if ARRAYS else config["array_list"]
+    barry_duration = (pd.Timedelta(seconds=config["Barry Arm East"]["DURATION"]) if "Barry Arm East" in array_list else None)
+    time_windows = pd.date_range(T2, t1.strftime("%Y%m%d%H%M"), freq="-10min")
+    last_window_index = len(time_windows) - 1
+    for window_index, t in enumerate(time_windows):
         my_log.info(t)
 
-        if len(ARRAYS) > 0:
-            array_list = ARRAYS
-        else:
-            array_list = config["array_list"]
         for array_name in array_list:
             # check if you should process this time window
             file = utils.get_pngfile_path(t, array_name, config)
@@ -111,13 +111,16 @@ def run_backpopulate(config, T1, T2, OVERWRITE, ARRAYS, my_log):
                 my_log.info("File exists. No overwrite. Skip " + array_name)
 
             if array_name == "Barry Arm East":
-                plot_day = (t - pd.Timedelta(seconds=config[array_name]["DURATION"])).date()
-                if (
-                    plot_day not in plotted_barry_days
-                    and barry_dashboard.is_barry_ascii_file_complete(config, plot_day)
+                plot_day = (t - barry_duration).date()
+                is_last_window_of_day = t.hour == 0 and t.minute == 10
+                is_last_window_of_processing_run = (window_index == last_window_index)
+                if plot_day not in barry_already_plotted and (
+                    is_last_window_of_day
+                    or is_last_window_of_processing_run
+                    or barry_dashboard.is_barry_ascii_file_complete(config, plot_day)
                 ):
                     barry_dashboard.barry_arm_plot(config, plot_day)
-                    plotted_barry_days.add(plot_day)
+                    barry_already_plotted.add(plot_day)
 
     my_log.info("Back population complete.")
     my_log.info("Writing .html file")

@@ -9,7 +9,7 @@ from matplotlib import rcParams
 import pandas as pd
 import json
 import numpy as np
-from datetime import date
+from datetime import datetime, timezone
 
 
 
@@ -29,11 +29,10 @@ def write_barry_dashboard_html(config=None):
 
     out_dir = Path(config["OUT_WEB_DIR"]) if config else Path.cwd() / "output/html"
     out_dir.mkdir(parents=True, exist_ok=True)
-    today = date.today().isoformat()
-    plot_path = (Path("Landslides") / "Barry Arm East" / "velaz_plots" / f"barry_arm_velaz_{today}.png").as_posix()
+    today = datetime.now(timezone.utc).date().isoformat()
     out_file = out_dir / "barry_dashboard.html"
     with open(out_file, "w") as f:
-        f.write(template.render(plot_path=plot_path))
+        f.write(template.render(today=today))
     my_log.info("Barry Arm dashboard html written")
 
 def correct_velocity_for_temp():
@@ -69,16 +68,19 @@ def plot_zones_json(json_path, figax, zone_tag="zones",
     return (fig,ax)
 
 
-def is_barry_ascii_file_complete(config, plot_date):
+def is_barry_ascii_file_complete(config=None, plot_date=None):
     """Return whether the Barry Arm ASCII file has its expected 5,762 lines."""
-    ascii_dir = Path(config["OUT_ASCII_DIR"])
+    ascii_dir = Path(config["OUT_ASCII_DIR"]) if config else Path.cwd() / "output/ascii_output"
     plot_day = plot_date.isoformat()
     data_file = ascii_dir / "Barry_Arm_East" / plot_day[:7] / f"Barry_Arm_East_{plot_day}.txt"
+    print(data_file)
     if not data_file.exists():
+        my_log.warning("No Barry Arm ASCII file found for %s: %s", plot_day, data_file)
         return False
 
     with open(data_file, "r") as f:
-        return sum(1 for _ in f) == 5762
+        line_count = sum(1 for _ in f)
+        return line_count >= 5722 #create plot if complete (or up to 39 lines are missing)
 
 
 def barry_arm_plot(config=None, plot_date=None):
@@ -86,7 +88,7 @@ def barry_arm_plot(config=None, plot_date=None):
     Locate the requested day's ASCII file, add kinematic elements overlay, and save it.
     """
     ascii_dir = Path(config["OUT_ASCII_DIR"]) if config else Path.cwd() / "output/ascii_output"
-    plot_day = (plot_date or date.today()).isoformat()
+    plot_day = (plot_date or datetime.now(timezone.utc).date()).isoformat()
     data_file = ascii_dir / "Barry_Arm_East" / plot_day[:7] / f"Barry_Arm_East_{plot_day}.txt"
     if not data_file.exists():
         my_log.warning("No Barry Arm ASCII file found for %s: %s", plot_day, data_file)
@@ -135,7 +137,7 @@ def barry_arm_plot(config=None, plot_date=None):
     fig.colorbar(scatter, ax=ax, label="MCCM")
     fig.tight_layout()
 
-    plt.legend()
+    plt.legend(loc="upper right", title="Kinematic elements")
 
     #Saving
     fig.savefig(plot_file, dpi=120)
@@ -146,5 +148,8 @@ def barry_arm_plot(config=None, plot_date=None):
 
 
 if __name__ == "__main__":
-    pf = barry_arm_plot()
-    print(f"Test barry arm plot created - {pf}")
+    for plot_date in pd.date_range("2026-10-02", "2026-10-07").date:
+        print(plot_date)
+        print(f" script complete test {is_barry_ascii_file_complete(plot_date=plot_date)}")
+        pf = barry_arm_plot(plot_date=plot_date)
+        print(f"Test barry arm plot created for {plot_date} - {pf}")

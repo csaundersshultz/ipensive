@@ -112,6 +112,40 @@ def test_get_pngfile_path():
     assert str(path).endswith('.png')
 
 
+def test_backpopulate_attempts_barry_plot_at_day_boundaries(monkeypatch):
+    import logging
+    from datetime import date
+    from ipensive.scripts import back_populate
+
+    config = {
+        "DURATION": 600,
+        "array_list": ["Barry Arm East"],
+        "Barry Arm East": {"DURATION": 600},
+    }
+    attempted_days = []
+    monkeypatch.setattr(back_populate.utils, "get_pngfile_path", lambda *args: Path("missing.png"))
+    monkeypatch.setattr(Path, "exists", lambda self: False)
+    monkeypatch.setattr(back_populate, "process_array", lambda *args: None)
+    monkeypatch.setattr(
+        back_populate.barry_dashboard,
+        "is_barry_ascii_file_complete",
+        lambda *args: False,
+    )
+    monkeypatch.setattr(
+        back_populate.barry_dashboard,
+        "barry_arm_plot",
+        lambda config, plot_day: attempted_days.append(plot_day),
+    )
+    monkeypatch.setattr(back_populate.utils, "write_html", lambda *args: None)
+    monkeypatch.setattr(back_populate.barry_dashboard, "write_barry_dashboard_html", lambda *args: None)
+
+    back_populate.run_backpopulate(
+        config, "202610012340", "202610020010", False, [], logging.getLogger(__name__)
+    )
+
+    assert attempted_days == [date(2026, 10, 2), date(2026, 10, 1)]
+
+
 def test_get_obspy_client_fdsn():
     # Minimal config for FDSN
     conf = {'CLIENT_TYPE': 'fdsn', 'HOSTNAME': 'earthscope', 'TIMEOUT': 5}
